@@ -4,7 +4,7 @@ import pandas as pd
 import joblib
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
-from logistic_regression import LogisticRegression
+from logistic_regression import LogisticRegression, OneVsRestClassifier
 
 #CHECK ARGS
 args = sys.argv
@@ -29,11 +29,16 @@ oe_X = OrdinalEncoder(categories=[["Left", "Right"]])
 X["Best Hand"] = oe_X.fit_transform(X["Best Hand"].to_numpy().reshape(-1, 1))
 X = X.to_numpy()
 scaler_X = StandardScaler()
+
+#SCALE DATA
 X_scaled = scaler_X.fit_transform(X)
 y = train_dataset[["Hogwarts House"]].to_numpy().flatten()
 
 #TRAIN DATASET
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y)
-model = LogisticRegression(classes=["Gryffindor", "Hufflepuff", "Slytherin", "Ravenclaw"])
-model.fit_ovr(X_train, y_train)
+model = OneVsRestClassifier(LogisticRegression())
+model.fit(X_train, y_train)
+
+#SERIALIZE MODEL
 joblib.dump(model, model_name)
+
