@@ -45,4 +45,18 @@ X_scaled = scaler_X.fit_transform(X)
 my_predictions = my_model.predict(X)
 print("Y_TEST\n", y)
 print("PREDICTIONS\n", my_predictions)
-print(f"ACCURACY:{(y == my_predictions) * 100}%")
+print(f"ACCURACY:{(y == my_predictions).mean() * 100}%")
+
+#OPEN FILE
+try:
+    file = open("houses.csv", "w")
+except Exception:
+    print("Couldn't open file!")
+    exit(4)
+
+#WRITE PREDICTIONS TO FILE
+file.write("Index,Hogwarts House")
+for idx, pred in enumerate(my_predictions):
+    file.write(f"{idx},{pred}\n")
+    
+file.close()
