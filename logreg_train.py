@@ -24,7 +24,7 @@ except FileNotFoundError:
 #CLEAN DATASET 
 train_dataset = train_dataset.dropna()
 X = train_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
-                            "Best Hand", "Arithmancy", "Care of Magical Creatures", "Potions"])
+                            "Best Hand", "Astronomy"])
 X = X.to_numpy()
 scaler_X = StandardScaler()
 

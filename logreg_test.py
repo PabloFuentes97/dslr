@@ -30,12 +30,14 @@ except FileNotFoundError:
     print("File not found!")
     exit(3)
     
-#CLEAN DATASET 
-test_dataset = test_dataset.dropna()
+#CLEAN DATASET
+
 X = test_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
-                            "Best Hand", "Arithmancy", "Care of Magical Creatures", "Potions"])
+                            "Best Hand", "Astronomy"])
+                            
 X = X.to_numpy()
-y = test_dataset[["Hogwarts House"]].to_numpy().flatten()
+
+#y = test_dataset[["Hogwarts House"]].to_numpy().flatten()
 
 #SCALE DATA
 scaler_X = StandardScaler()
@@ -43,7 +45,7 @@ X_scaled = scaler_X.fit_transform(X)
 
 #PREDICTIONS
 my_predictions = my_model.predict(X_scaled)
-print(f"MY MODEL ACCURACY: {accuracy_score(y, my_predictions) * 100}%")
+#print(f"MY MODEL ACCURACY: {accuracy_score(y, my_predictions) * 100}%")
 
 #OPEN FILE
 try:

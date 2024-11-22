@@ -46,7 +46,7 @@ class DataStatistics:
         return lower_value + fractional_part * (upper_value - lower_value)
 
     def standard_deviation(self, items):
-        filtered_items = self.filter_items(items)
+        filtered_items = self.filter_items(items).
         mean_value = self.mean(filtered_items)
         squared_diff_sum = sum((item - mean_value) ** 2 for item in filtered_items)
         variance = squared_diff_sum / (self.count(filtered_items) - 1)
