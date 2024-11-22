@@ -5,19 +5,15 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 import logistic_regression as logreg
-from sklearn.metrics import accuracy_score, log_loss
-import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 
 #TRAIN DATASET
 dataset = pd.read_csv("dataset_train.csv")
 dataset = dataset.dropna()
 
 X = dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
-                            "Best Hand", "Arithmancy", "Care of Magical Creatures", "Potions"])
-'''
-oe_X = OrdinalEncoder(categories=[["Left", "Right"]])
-X["Best Hand"] = oe_X.fit_transform(X["Best Hand"].to_numpy().reshape(-1, 1))
-'''
+                            "Best Hand", "Arithmancy", "Care of Magical Creatures"])
+
 X = X.to_numpy()
 scaler_X = StandardScaler()
 X_scaled = scaler_X.fit_transform(X)
@@ -36,18 +32,10 @@ sk_model.fit(X_train, y_train)
 #PREDICTIONS
 my_predictions = my_model.predict(X_test)
 sk_predictions = sk_model.predict(X_test)
-my_proba = my_model.predict_proba(X_test)
-sk_proba = sk_model.predict_proba(X_test)
-
-np.set_printoptions(precision=5, suppress=True)
-print("MY PROBA:", my_proba[:5])
-print("SK PROBA:", sk_proba[:5])
 
 print(f"MY_ACCURACY: {(y_test == my_predictions).mean() * 100}%")
 print(f"SK_ACCURACY: {sk_model.score(X_test, y_test) * 100}%")
-
-print("MY CATEGORICAL CROSS ENTROPY LOSS:", logreg.categorical_cross_entropy(y_test, my_proba))
-print("SK CATEGORICAL CROSS ENTROPY LOSS:", log_loss(y_test, sk_proba))
+print(f"MY MODEL ACCURACY: {accuracy_score(y_test, my_predictions) * 100}%")
 
 #SOFTMAX
 oe = OrdinalEncoder(categories=[["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"]])

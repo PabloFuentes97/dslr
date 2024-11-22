@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
+from sklearn.metrics import accuracy_score
 from logistic_regression import OneVsRestClassifier, LogisticRegression
 import joblib
 import sys
@@ -31,9 +32,8 @@ except FileNotFoundError:
     
 #CLEAN DATASET 
 test_dataset = test_dataset.dropna()
-X = test_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday"])
-oe_X = OrdinalEncoder(categories=[["Left", "Right"]])
-X["Best Hand"] = oe_X.fit_transform(X["Best Hand"].to_numpy().reshape(-1, 1))
+X = test_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
+                            "Best Hand", "Arithmancy", "Care of Magical Creatures", "Potions"])
 X = X.to_numpy()
 y = test_dataset[["Hogwarts House"]].to_numpy().flatten()
 
@@ -42,10 +42,8 @@ scaler_X = StandardScaler()
 X_scaled = scaler_X.fit_transform(X)
 
 #PREDICTIONS
-my_predictions = my_model.predict(X)
-print("Y_TEST\n", y)
-print("PREDICTIONS\n", my_predictions)
-print(f"ACCURACY:{(y == my_predictions).mean() * 100}%")
+my_predictions = my_model.predict(X_scaled)
+print(f"MY MODEL ACCURACY: {accuracy_score(y, my_predictions) * 100}%")
 
 #OPEN FILE
 try:
@@ -55,7 +53,7 @@ except Exception:
     exit(4)
 
 #WRITE PREDICTIONS TO FILE
-file.write("Index,Hogwarts House")
+file.write("Index,Hogwarts House\n")
 for idx, pred in enumerate(my_predictions):
     file.write(f"{idx},{pred}\n")
     

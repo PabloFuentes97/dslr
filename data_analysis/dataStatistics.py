@@ -52,6 +52,9 @@ class DataStatistics:
         variance = squared_diff_sum / (self.count(filtered_items) - 1)
         return math.sqrt(variance)
 
+    def median(self, items):
+        filtered_items = self.filter_items(items)
+
 
     def get_numerical_columns(self):
         columns = self.df.select_dtypes(include=['number']).columns.tolist()
@@ -66,11 +69,12 @@ class DataStatistics:
         percentile_25 = [self.percentile(self.df[col], 0.25) for col in header]
         percentile_50 = [self.percentile(self.df[col], 0.5) for col in header]
         percentile_75 = [self.percentile(self.df[col], 0.75) for col in header]
+        percentile_90 = [self.percentile(self.df[col], 0.90) for col in header]
         max_values = [self.max(self.df[col]) for col in header]
-        return header, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75, max_values
+        return header, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75,percentile_90, max_values
 
     def describe(self):
-        headers, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75, max_values = self.get_statistics()
+        headers, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75, percentile_90, max_values = self.get_statistics()
         headers.insert(0, "")
         count_values.insert(0, "Count")
         mean_values.insert(0, "Mean")
@@ -79,10 +83,11 @@ class DataStatistics:
         percentile_25.insert(0, "25%")
         percentile_50.insert(0, "50%")
         percentile_75.insert(0, "75%")
+        percentile_90.insert(0, "90%")
         max_values.insert(0, "Max")
 
-        rows = [headers, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75, max_values]
-        self.print_table(rows         )
+        rows = [headers, count_values, mean_values, std_values, min_values, percentile_25, percentile_50, percentile_75, percentile_90, max_values]
+        self.print_table(rows  )
 
     def print_table(self, rows):
         column_widths = self.calculate_column_widths(rows)
