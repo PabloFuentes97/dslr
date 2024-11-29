@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.metrics import accuracy_score
-from logistic_regression import OneVsRestClassifier, LogisticRegression
+#from logistic_regression import OneVsRestClassifier, LogisticRegression
+from itertools import combinations
 import joblib
 import sys
+import matplotlib.pyplot as plt
 
 #CHECK ARGS
 args = sys.argv
@@ -31,22 +33,18 @@ except FileNotFoundError:
     exit(3)
     
 #CLEAN DATASET
-
-X = test_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
-                            "Best Hand", "Astronomy"])
-                            
+test_dataset = test_dataset.fillna(0)
+X = test_dataset[["Defense Against the Dark Arts", "Astronomy", "Charms", "Herbology"]]
+#X.fillna(0)
 X = X.to_numpy()
-
-#y = test_dataset[["Hogwarts House"]].to_numpy().flatten()
 
 #SCALE DATA
 scaler_X = StandardScaler()
 X_scaled = scaler_X.fit_transform(X)
-
 #PREDICTIONS
 my_predictions = my_model.predict(X_scaled)
-#print(f"MY MODEL ACCURACY: {accuracy_score(y, my_predictions) * 100}%")
-
+#print(f"MY MODEL ACCURACY: {accuracy_score(y, my_predictions) * 100}%") 
+    
 #OPEN FILE
 try:
     file = open("houses.csv", "w")

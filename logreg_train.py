@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import joblib
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
-from sklearn.model_selection import train_test_split
 from logistic_regression import LogisticRegression, OneVsRestClassifier
 
 #CHECK ARGS
@@ -21,10 +20,11 @@ except FileNotFoundError:
     print("File not found!")
     exit(2)
     
-#CLEAN DATASET 
-train_dataset = train_dataset.dropna()
-X = train_dataset.drop(columns=["Hogwarts House", "Index", "First Name", "Last Name", "Birthday", 
-                            "Best Hand", "Astronomy"])
+#CLEAN DATASET
+train_dataset = train_dataset.fillna(0)
+X = train_dataset[["Defense Against the Dark Arts", "Astronomy", "Charms", "Herbology"]]
+
+#X.fillna(0)
 X = X.to_numpy()
 scaler_X = StandardScaler()
 
@@ -38,4 +38,3 @@ model.fit(X_scaled, y)
 
 #SERIALIZE MODEL
 joblib.dump(model, "my_model")
-
